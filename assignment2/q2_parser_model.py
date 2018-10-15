@@ -143,14 +143,18 @@ class ParserModel(Model):
         xavier_initializer=xavier_weight_init()
         
         W = tf.Variable(xavier_initializer((self.config.n_features*self.config.embed_size, 
-                                            self.config.hidden_size)))
-        b1 = tf.Variable(xavier_initializer((1,self.config.hidden_size)))
+                                            self.config.hidden_size)),
+                        name='W')
+        b1 = tf.Variable(xavier_initializer((1,self.config.hidden_size)),
+                        name='b1')
         
-        U = tf.Variable(xavier_initializer((self.config.hidden_size,self.config.n_classes)))
-        b2 = tf.Variable(xavier_initializer((1,self.config.n_classes)))
+        U = tf.Variable(xavier_initializer((self.config.hidden_size,self.config.n_classes)),
+                       name='U')
+        b2 = tf.Variable(xavier_initializer((1,self.config.n_classes)),
+                        name='b2')
         
         h = tf.nn.relu(tf.matmul(x,W)+b1)
-        h_drop = tf.nn.dropout(h,(1-self.dropout_placeholder))
+        h_drop = tf.nn.dropout(h,1-self.dropout_placeholder)
         
         pred = tf.matmul(h_drop,U)+b2
         ### END YOUR CODE
